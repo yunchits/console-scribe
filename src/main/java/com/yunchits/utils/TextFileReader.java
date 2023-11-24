@@ -18,9 +18,9 @@ public class TextFileReader {
         return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 
-    private void validateFile(String filePath, File file) {
+    private void validateFile(String filePath, File file) throws IOException {
         if (!file.exists() || !file.isFile() || !isAllowedExtension(file)) {
-            throw new IllegalArgumentException("Invalid file:" + filePath);
+            throw new IOException("Invalid file:" + filePath);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.yunchits.menu;
 
+import com.yunchits.utils.log.LogFileWriter;
+import com.yunchits.utils.log.MenuLogWriter;
 import com.yunchits.utils.TextFileReader;
 import com.yunchits.utils.text.TextAnalyzer;
 import com.yunchits.utils.input.InputScanner;
@@ -10,15 +12,18 @@ import java.io.IOException;
 
 public class MenuHandler {
 
+    public static final Logger LOGGER = LogManager.getLogger(MenuHandler.class);
+
     private final InputScanner scanner;
 
     private final TextFileReader reader;
 
-    public static final Logger LOGGER = LogManager.getLogger(MenuHandler.class);
+    private final MenuLogWriter menuLogger;
 
-    public MenuHandler() {
+    public MenuHandler(LogFileWriter logFileWriter) {
         this.scanner = new InputScanner();
         this.reader = new TextFileReader();
+        this.menuLogger = new MenuLogWriter(logFileWriter);
     }
 
     public void displayMenu() throws IOException {
@@ -57,7 +62,7 @@ public class MenuHandler {
     private void displayTextMenu(String s) {
         int choice;
         do {
-            LOGGER.info("1 - Unique letters");
+            LOGGER.info("1 - Unique words");
             LOGGER.info("2 - Number of letters");
             LOGGER.info("3 - Word search");
             LOGGER.info("0 - Exit");
@@ -65,7 +70,7 @@ public class MenuHandler {
             choice = scanner.scanInt(0, 3);
             switch (choice) {
                 case 1:
-                    uniqueLetters(s);
+                    uniqueWords(s);
                     break;
                 case 2:
                     numberOfLetters(s);
@@ -75,6 +80,7 @@ public class MenuHandler {
                     break;
                 case 0:
                     LOGGER.info("Exiting...");
+                    scanner.close();
                     break;
                 default:
                     throw new IllegalArgumentException("Unexpected input: " + choice);
@@ -82,15 +88,20 @@ public class MenuHandler {
         } while (choice != 0);
     }
 
-    private void uniqueLetters(String s) {
-        int uniqueLetters = TextAnalyzer.countUniqueLetters(s);
-        LOGGER.info("Number of unique letters: " + uniqueLetters);
+    private void uniqueWords(String s) {
+        int uniqueWords = TextAnalyzer.countUniqueWords(s);
+        LOGGER.info("Number of unique words: " + uniqueWords);
+
+        menuLogger.writeUniqueWords(s, uniqueWords);
     }
 
     private void numberOfLetters(String s) {
         int allLetters = TextAnalyzer.countLetters(s);
-        LOGGER.info("Result: " + TextAnalyzer.split(s));
+        String result = TextAnalyzer.split(s);
+        LOGGER.info("Result: " + result);
         LOGGER.info("Number of letters: " + allLetters);
+
+        menuLogger.writeNumberOfLetters(s, allLetters);
     }
 
     private void searchWord(String s) {
@@ -102,8 +113,12 @@ public class MenuHandler {
         if (TextAnalyzer.hasWord(s, word)) {
             int count = TextAnalyzer.countWordOccurrences(s, word);
             LOGGER.info("Result: " + count + " match found");
+
+            menuLogger.writeSearchWord(s, word, count);
         } else {
             LOGGER.info("No matches found");
+
+            menuLogger.writeSearchWord(s, word, 0);
         }
     }
 }

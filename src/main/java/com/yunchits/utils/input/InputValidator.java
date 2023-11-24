@@ -1,5 +1,6 @@
 package com.yunchits.utils.input;
 
+import com.yunchits.exceptions.InvalidIntegerException;
 import com.yunchits.exceptions.InvalidWordException;
 
 public class InputValidator {
@@ -9,12 +10,12 @@ public class InputValidator {
     }
 
     public boolean isValidWord(String input) {
-        return input.matches("^[a-zA-Z]{2,}$");
+        return input.matches("^[a-zA-Zа-яА-Я]{2,}$");
     }
 
-    public void validateInt(int input, int min, int max) throws InvalidWordException {
+    public void validateInt(int input, int min, int max) throws InvalidIntegerException {
         if (!isValidInt(input, min, max)) {
-            throw new InvalidWordException("Please enter an integer in the range from " + min + " to " + max);
+            throw new InvalidIntegerException("Please enter an integer in the range from " + min + " to " + max);
         }
     }
 

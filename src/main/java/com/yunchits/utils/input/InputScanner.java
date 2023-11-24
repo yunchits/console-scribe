@@ -1,9 +1,11 @@
 package com.yunchits.utils.input;
 
+import com.yunchits.exceptions.InvalidIntegerException;
 import com.yunchits.exceptions.InvalidWordException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class InputScanner {
@@ -14,7 +16,7 @@ public class InputScanner {
     private final InputValidator validator;
 
     public InputScanner() {
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in, StandardCharsets.UTF_8);
         this.validator = new InputValidator();
     }
 
@@ -35,7 +37,7 @@ public class InputScanner {
 
             try {
                 validator.validateInt(input, min, max);
-            } catch (InvalidWordException e) {
+            } catch (InvalidIntegerException e) {
                 LOGGER.info("Invalid input: " + e.getMessage());
             }
         } while (!validator.isValidInt(input, min, max));
@@ -57,5 +59,9 @@ public class InputScanner {
 
         } while (!validator.isValidWord(input));
         return input;
+    }
+
+    public void close() {
+        scanner.close();
     }
 }
