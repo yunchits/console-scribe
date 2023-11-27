@@ -104,9 +104,9 @@ public class MenuHandler {
         int count = TextAnalyzer.countWordOccurrences(s, word);
 
         if (count == 0) {
-            LOGGER.info("Result: " + count + " match found");
-        } else {
             LOGGER.info("No matches found");
+        } else {
+            LOGGER.info("Result: " + count + " match found");
         }
 
         menuLogger.writeSearchWord(s, word, count);
