@@ -13,11 +13,9 @@ public class InputScanner {
     public static final Logger LOGGER = LogManager.getLogger(InputScanner.class);
 
     private final Scanner scanner;
-    private final InputValidator validator;
 
     public InputScanner() {
         this.scanner = new Scanner(System.in, StandardCharsets.UTF_8);
-        this.validator = new InputValidator();
     }
 
     public String scanString() {
@@ -26,39 +24,35 @@ public class InputScanner {
 
     public int scanInt(int min, int max) {
         int input;
-        do {
+        while (true){
             while (!scanner.hasNextInt()) {
                 LOGGER.info("Please enter a valid integer: ");
-                scanner.next();
+                scanner.nextLine();
             }
-
             input = scanner.nextInt();
-
-
+            scanner.nextLine();
             try {
-                validator.validateInt(input, min, max);
+                InputValidator.validateInt(input, min, max);
+                return input;
             } catch (InvalidIntegerException e) {
                 LOGGER.info("Invalid input: " + e.getMessage());
+                scanner.nextLine();
             }
-        } while (!validator.isValidInt(input, min, max));
-        scanner.nextLine();
-        return input;
+        }
     }
 
     public String scanWord() {
         String input;
-        do {
+        while (true){
             LOGGER.info("Please enter a single word: ");
-            input = scanner.next();
+            input = scanner.nextLine();
            try {
-               validator.validateWord(input);
+               InputValidator.validateWord(input);
+               return input;
            } catch (InvalidWordException e) {
                LOGGER.info("Invalid input: " + e.getMessage());
            }
-
-
-        } while (!validator.isValidWord(input));
-        return input;
+        }
     }
 
     public void close() {

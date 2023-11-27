@@ -4,7 +4,7 @@ package com.yunchits.utils.text;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class TextAnalyzer {
+public final class TextAnalyzer {
 
     private TextAnalyzer() {
     }
@@ -38,8 +38,12 @@ public class TextAnalyzer {
     }
 
     public static int countWordOccurrences(String s, String word) {
-        String[] words = words(s);
         int count = 0;
+
+        if(!hasWord(s,word)){
+            return count;
+        }
+        String[] words = words(s);
 
         for (String w : words) {
             if (StringUtils.equalsIgnoreCase(w, word)) {

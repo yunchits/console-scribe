@@ -1,10 +1,10 @@
 package com.yunchits.menu;
 
+import com.yunchits.utils.TextFileReader;
+import com.yunchits.utils.input.InputScanner;
 import com.yunchits.utils.log.LogFileWriter;
 import com.yunchits.utils.log.MenuLogWriter;
-import com.yunchits.utils.TextFileReader;
 import com.yunchits.utils.text.TextAnalyzer;
-import com.yunchits.utils.input.InputScanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,24 +27,15 @@ public class MenuHandler {
     }
 
     public void displayMenu() throws IOException {
-        int choice;
-
         LOGGER.info("1 - Enter text...");
         LOGGER.info("2 - Read from text file...");
 
-        choice = scanner.scanInt(1, 2);
-        String text;
-        switch (choice) {
-            case 1:
-                text = enterText();
-                break;
-            case 2:
-                text = readFromFile();
-                break;
-            default:
-                throw new IllegalArgumentException("Unexpected input: " + choice);
-        }
-
+        int choice = scanner.scanInt(1, 2);
+        String text = switch (choice) {
+            case 1 -> enterText();
+            case 2 -> readFromFile();
+            default -> throw new IllegalArgumentException("Unexpected input: " + choice);
+        };
         displayTextMenu(text);
     }
 
@@ -110,15 +101,15 @@ public class MenuHandler {
 
         LOGGER.info("Search for the word: " + word);
 
-        if (TextAnalyzer.hasWord(s, word)) {
-            int count = TextAnalyzer.countWordOccurrences(s, word);
-            LOGGER.info("Result: " + count + " match found");
+        int count = TextAnalyzer.countWordOccurrences(s, word);
 
-            menuLogger.writeSearchWord(s, word, count);
+        if (count == 0) {
+            LOGGER.info("Result: " + count + " match found");
         } else {
             LOGGER.info("No matches found");
-
-            menuLogger.writeSearchWord(s, word, 0);
         }
+
+        menuLogger.writeSearchWord(s, word, count);
+
     }
 }
