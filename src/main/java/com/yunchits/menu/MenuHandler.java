@@ -27,12 +27,10 @@ public class MenuHandler {
     }
 
     public void displayMenu() throws IOException {
-        int choice;
-
         LOGGER.info("1 - Enter text...");
         LOGGER.info("2 - Read from text file...");
 
-        choice = scanner.scanInt(1, 2);
+        int choice = scanner.scanInt(1, 2);
         String text;
         switch (choice) {
             case 1:
@@ -44,7 +42,6 @@ public class MenuHandler {
             default:
                 throw new IllegalArgumentException("Unexpected input: " + choice);
         }
-
         displayTextMenu(text);
     }
 
@@ -61,6 +58,7 @@ public class MenuHandler {
 
     private void displayTextMenu(String s) {
         int choice;
+
         do {
             LOGGER.info("1 - Unique words");
             LOGGER.info("2 - Number of letters");

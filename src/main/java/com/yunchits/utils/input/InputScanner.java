@@ -34,7 +34,6 @@ public class InputScanner {
 
             input = scanner.nextInt();
 
-
             try {
                 validator.validateInt(input, min, max);
             } catch (InvalidIntegerException e) {
@@ -55,8 +54,6 @@ public class InputScanner {
            } catch (InvalidWordException e) {
                LOGGER.info("Invalid input: " + e.getMessage());
            }
-
-
         } while (!validator.isValidWord(input));
         return input;
     }
